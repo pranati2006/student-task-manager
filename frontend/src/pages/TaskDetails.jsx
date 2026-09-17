@@ -1,0 +1,1 @@
+import { Link, useParams } from 'react-router-dom'; export default function TaskDetails() { const { id } = useParams(); return <main className="simple-page"><Link to="/tasks">← Back to tasks</Link><p className="eyebrow">Task #{id}</p><h1>Task details</h1><p className="muted">This task is ready for your notes and updates.</p></main> }

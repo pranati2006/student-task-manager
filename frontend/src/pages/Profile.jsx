@@ -1,0 +1,1 @@
+import { useAuth } from '../hooks/useAuth'; export default function Profile() { const { user } = useAuth(); return <main className="simple-page"><p className="eyebrow">Account</p><h1>Your profile</h1><p className="muted">{user?.email}</p></main> }

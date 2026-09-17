@@ -1,0 +1,1 @@
+export default function TaskFilter({ value, onChange }) { return <select className="filter" value={value} onChange={e => onChange(e.target.value)}><option value="all">All tasks</option><option value="active">Active</option><option value="completed">Completed</option></select> }

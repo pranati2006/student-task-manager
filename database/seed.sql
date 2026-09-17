@@ -1,0 +1,1 @@
+INSERT INTO users (name, email, password_hash) VALUES ('Demo Student', 'student@example.com', 'replace-with-a-bcrypt-hash');

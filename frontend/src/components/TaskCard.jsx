@@ -1,0 +1,3 @@
+import { Link } from 'react-router-dom'
+import PriorityBadge from './PriorityBadge'
+export default function TaskCard({ task, onToggle }) { return <article className={`task-card ${task.completed ? 'done' : ''}`}><div className="task-check" onClick={() => onToggle(task.id)}>{task.completed ? '✓' : ''}</div><div className="task-body"><Link to={`/tasks/${task.id}`}><h3>{task.title}</h3></Link><p>{task.description || 'No description added'}</p><div className="task-meta"><PriorityBadge priority={task.priority} /><span>{task.due_date || 'No due date'}</span></div></div></article> }
