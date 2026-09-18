@@ -1,2 +1,12 @@
-import { NavLink } from 'react-router-dom'
-export default function Sidebar() { return <aside className="sidebar"><p className="eyebrow">Workspace</p><NavLink to="/dashboard">Overview</NavLink><NavLink to="/tasks">All tasks</NavLink><NavLink to="/profile">Profile</NavLink></aside> }
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+
+export const Sidebar = () => {
+    return (
+        <aside className="sidebar">
+            <NavLink to="/dashboard" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Dashboard</NavLink>
+            <NavLink to="/tasks" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Tasks</NavLink>
+            <NavLink to="/profile" className={({ isActive }) => isActive ? 'nav-link active' : 'nav-link'}>Profile</NavLink>
+        </aside>
+    );
+};

@@ -1,3 +1,17 @@
-import { Link } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
-export default function Navbar() { const { user, logout } = useAuth(); return <header className="navbar"><Link className="brand" to="/dashboard"><span>✦</span> StudyFlow</Link>{user && <nav><Link to="/tasks">My tasks</Link><Link to="/profile">{user.name}</Link><button onClick={logout}>Log out</button></nav>}</header> }
+import React from 'react';
+import { useAuth } from '../hooks/useAuth';
+
+export const Navbar = () => {
+    const { user, logout } = useAuth();
+    return (
+        <header className="navbar">
+            <div className="navbar-brand">Student Tasks</div>
+            {user && (
+                <div className="navbar-actions">
+                    <span className="user-email">{user.email}</span>
+                    <button className="btn-secondary" onClick={logout}>Logout</button>
+                </div>
+            )}
+        </header>
+    );
+};

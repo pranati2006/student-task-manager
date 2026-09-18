@@ -1,2 +1,42 @@
-import { useState } from 'react'; import { Link, useNavigate } from 'react-router-dom'; import { useAuth } from '../hooks/useAuth'
-export default function Login() { const [email, setEmail] = useState('student@example.com'); const { login } = useAuth(); const navigate = useNavigate(); return <main className="auth-page"><section className="auth-panel"><p className="eyebrow">Welcome back</p><h1>Make space for<br /><em>good work.</em></h1><form onSubmit={e => { e.preventDefault(); login(email); navigate('/dashboard') }}><label>Email<input type="email" value={email} onChange={e => setEmail(e.target.value)} required /></label><label>Password<input type="password" defaultValue="password" required /></label><button className="primary">Sign in</button></form><p className="muted">New here? <Link to="/register">Create an account</Link></p></section></main> }
+import React, { useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { useNavigate, Link } from 'react-router-dom';
+import { ErrorMessage } from '../components/ErrorMessage';
+import '../styles/auth.css';
+
+export const Login = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const { login } = useAuth();
+    const navigate = useNavigate();
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await login(email, password);
+            navigate('/dashboard');
+        } catch {
+            setError('Invalid email or password.');
+        }
+    };
+
+    return (
+        <div className="auth-wrapper">
+            <form onSubmit={handleSubmit} className="auth-card">
+                <h2>Welcome back!</h2>
+                <ErrorMessage message={error} />
+                <div className="form-group">
+                    <label>Email</label>
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
+                </div>
+                <div className="form-group">
+                    <label>Password</label>
+                    <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
+                </div>
+                <button type="submit" style={{ width: '100%' }}>Login</button>
+                <div className="auth-footer">Don't have an account? <Link to="/register">Register</Link></div>
+            </form>
+        </div>
+    );
+};

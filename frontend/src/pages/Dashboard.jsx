@@ -1,3 +1,30 @@
-import { Link } from 'react-router-dom'; import Sidebar from '../components/Sidebar'; import TaskCard from '../components/TaskCard'; import { useState } from 'react'
-const initial = [{ id: 1, title: 'Read chapter 4', description: 'Review the key concepts before seminar.', priority: 'high', due_date: 'Today', completed: false }, { id: 2, title: 'Submit statistics worksheet', description: 'Upload the final PDF to the course portal.', priority: 'medium', due_date: 'Tomorrow', completed: false }, { id: 3, title: 'Plan weekend study block', description: '', priority: 'low', due_date: 'Friday', completed: true }]
-export default function Dashboard() { const [tasks, setTasks] = useState(initial); const toggle = id => setTasks(tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t)); return <div className="app-shell"><Sidebar /><main className="content"><div className="page-heading"><div><p className="eyebrow">Thursday, September 17</p><h1>Your day, <em>in focus.</em></h1></div><Link className="primary" to="/tasks">View all tasks</Link></div><div className="stats"><div><strong>{tasks.filter(t => !t.completed).length}</strong><span>Open tasks</span></div><div><strong>{tasks.filter(t => t.completed).length}</strong><span>Completed</span></div><div><strong>72%</strong><span>This week's progress</span></div></div><section className="section-heading"><h2>Today's focus</h2><span>3 tasks</span></section><div className="task-list">{tasks.map(task => <TaskCard task={task} onToggle={toggle} key={task.id} />)}</div></main></div> }
+import React, { useEffect, useState } from 'react';
+import { taskService } from '../services/taskService';
+import { Loading } from '../components/Loading';
+import '../styles/dashboard.css';
+
+export const Dashboard = () => {
+    const [stats, setStats] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        taskService.getStats()
+            .then(setStats)
+            .catch(console.error)
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading) return <Loading text="Loading dashboard metrics..." />;
+
+    return (
+        <div>
+            <h1>Dashboard</h1>
+            <div className="stats-grid" style={{ marginTop: '1.5rem' }}>
+                <div className="stat-card"><h3>Total Tasks</h3><p>{stats?.total_tasks || 0}</p></div>
+                <div className="stat-card"><h3>Pending</h3><p>{stats?.pending_tasks || 0}</p></div>
+                <div className="stat-card"><h3>Completed</h3><p>{stats?.completed_tasks || 0}</p></div>
+                <div className="stat-card"><h3>Overdue</h3><p>{stats?.overdue_tasks || 0}</p></div>
+            </div>
+        </div>
+    );
+};

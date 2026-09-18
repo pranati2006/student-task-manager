@@ -1,10 +1,51 @@
-import { createContext, useContext, useState } from 'react'
+import React, { createContext, useState, useEffect } from 'react';
+import { authService } from '../services/authService';
 
-const AuthContext = createContext(null)
-export function AuthProvider({ children }) {
-    const [user, setUser] = useState(() => JSON.parse(localStorage.getItem('studyflow-user') || 'null'))
-    const login = (email) => { const next = { name: email.split('@')[0], email }; setUser(next); localStorage.setItem('studyflow-user', JSON.stringify(next)) }
-    const logout = () => { setUser(null); localStorage.removeItem('studyflow-user') }
-    return <AuthContext.Provider value={{ user, login, logout }}>{children}</AuthContext.Provider>
-}
-export const useAuth = () => useContext(AuthContext)
+export const AuthContext = createContext(null);
+
+export const AuthProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const initAuth = async () => {
+            const token = localStorage.getItem('access_token');
+            if (token) {
+                try {
+                    const currentUser = await authService.getMe();
+                    setUser(currentUser);
+                } catch {
+                    localStorage.removeItem('access_token');
+                    localStorage.removeItem('refresh_token');
+                    setUser(null);
+                }
+            }
+            setLoading(false);
+        };
+        initAuth();
+    }, []);
+
+    const login = async (email, password) => {
+        const data = await authService.login(email, password);
+        localStorage.setItem('access_token', data.access_token);
+        localStorage.setItem('refresh_token', data.refresh_token);
+        const currentUser = await authService.getMe();
+        setUser(currentUser);
+    };
+
+    const register = async (userData) => {
+        await authService.register(userData);
+    };
+
+    const logout = () => {
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        setUser(null);
+    };
+
+    return (
+        <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};

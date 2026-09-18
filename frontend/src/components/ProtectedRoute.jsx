@@ -1,3 +1,14 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
-import { useAuth } from '../hooks/useAuth'
-export default function ProtectedRoute() { const { user } = useAuth(); const location = useLocation(); return user ? <Outlet /> : <Navigate to="/login" state={{ from: location }} replace /> }
+import React from 'react';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../hooks/useAuth';
+import { Loading } from './Loading';
+
+export const ProtectedRoute = () => {
+    const { user, loading } = useAuth();
+
+    if (loading) {
+        return <Loading text="Verifying session..." />;
+    }
+
+    return user ? <Outlet /> : <Navigate to="/login" replace />;
+};
