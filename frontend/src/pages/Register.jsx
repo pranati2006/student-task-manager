@@ -1,87 +1,51 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigate, Link } from 'react-router-dom';
 import { ErrorMessage } from '../components/ErrorMessage';
+import '../styles/auth.css';
 
 export const Register = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
     const { register, login } = useAuth();
     const navigate = useNavigate();
 
     const parseApiError = (err) => {
         const detail = err.response?.data?.detail;
         if (typeof detail === 'string') return detail;
-        if (Array.isArray(detail)) {
-            return detail.map(d => `${d.loc?.[d.loc.length - 1] ?? 'field'}: ${d.msg}`).join(' | ');
-        }
-        return 'Registration failed. Please check connection or inputs.';
+        if (Array.isArray(detail)) return detail.map((item) => `${item.loc?.[item.loc.length - 1] ?? 'field'}: ${item.msg}`).join(' | ');
+        return 'Registration failed. Please check your connection and inputs.';
     };
-    return 'Registration failed. Please check connection or inputs.';
-};
 
-const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    try {
-        await register({ name, email, password });
-        await login(email, password);
-        navigate('/dashboard');
-    } catch (err) {
-        console.error('Registration/Login error:', err.response || err);
-        setError(parseApiError(err));
-    }
-};
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setError('');
+        setSubmitting(true);
+        try {
+            await register({ name, email, password });
+            await login(email, password);
+            navigate('/dashboard');
+        } catch (err) {
+            setError(parseApiError(err));
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
-return (
-    <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '100vh',
-        backgroundColor: '#f8fafc',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
-        <form onSubmit={handleSubmit} style={{
-            backgroundColor: 'white',
-            padding: '2rem',
-            borderRadius: '8px',
-            border: '1px solid #e2e8f0',
-            width: '100%',
-            maxWidth: '380px',
-            boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'
-        }}>
-            <h2 style={{ marginBottom: '1.5rem', textAlign: 'center', color: '#0f172a' }}>Create Account</h2>
-            <ErrorMessage message={error} />
-            <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                <label style={{ fontSize: '0.9rem', color: '#64748b' }}>Name</label>
-                <input type="text" value={name} onChange={e => setName(e.target.value)} required style={{ padding: '0.6rem', border: '1px solid #e2e8f0', borderRadius: '4px' }} />
-            </div>
-            <div style={{ marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                <label style={{ fontSize: '0.9rem', color: '#64748b' }}>Email</label>
-                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required style={{ padding: '0.6rem', border: '1px solid #e2e8f0', borderRadius: '4px' }} />
-            </div>
-            <div style={{ marginBottom: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
-                <label style={{ fontSize: '0.9rem', color: '#64748b' }}>Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} required style={{ padding: '0.6rem', border: '1px solid #e2e8f0', borderRadius: '4px' }} />
-            </div>
-            <button type="submit" style={{
-                width: '100%',
-                padding: '0.6rem',
-                backgroundColor: '#2563eb',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                fontWeight: 600,
-                cursor: 'pointer'
-            }}>
-                Create Account
-            </button>
-            <div style={{ marginTop: '1rem', textAlign: 'center', fontSize: '0.9rem', color: '#64748b' }}>
-                Already have an account? <Link to="/login" style={{ color: '#2563eb' }}>Login</Link>
-            </div>
-        </form>
-    </div>
-);
+    return (
+        <div className="auth-wrapper">
+            <form onSubmit={handleSubmit} className="auth-card">
+                <h2>Create Account</h2>
+                <ErrorMessage message={error} />
+                <div className="form-group"><label htmlFor="name">Name</label><input id="name" value={name} onChange={(event) => setName(event.target.value)} required /></div>
+                <div className="form-group"><label htmlFor="email">Email</label><input id="email" type="email" value={email} onChange={(event) => setEmail(event.target.value)} required /></div>
+                <div className="form-group"><label htmlFor="password">Password</label><input id="password" type="password" minLength="8" value={password} onChange={(event) => setPassword(event.target.value)} required /></div>
+                <button type="submit" disabled={submitting}>{submitting ? 'Creating account...' : 'Create Account'}</button>
+                <div className="auth-footer">Already have an account? <Link to="/login">Login</Link></div>
+            </form>
+        </div>
+    );
+};

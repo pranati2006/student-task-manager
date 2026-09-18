@@ -12,6 +12,10 @@ export const authService = {
     async getMe() {
         const res = await api.get('/auth/me');
         return res.data;
+    },
+    async refresh(refreshToken) {
+        const res = await api.post('/auth/refresh', { refresh_token: refreshToken });
+        return res.data;
     }
 };
 
