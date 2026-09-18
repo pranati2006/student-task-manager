@@ -6,7 +6,9 @@ app = FastAPI(title="Student Task Manager API", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # Tighten to frontend URL in production
+    allow_origins=[
+        "https://frontend-production-7ef4.up.railway.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
