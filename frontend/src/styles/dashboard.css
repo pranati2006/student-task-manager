@@ -1,1 +1,38 @@
-/* Dashboard-specific styles live in global.css for the starter scaffold. */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    padding: 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card h3 {
+    margin: 0;
+    color: var(--text-muted);
+    font-size: .8rem;
+}
+
+.stat-card p {
+    margin: .5rem 0 0;
+    color: #283b34;
+    font-size: 2.4rem;
+    font-weight: 800;
+}
+
+@media (max-width: 700px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

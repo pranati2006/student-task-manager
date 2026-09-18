@@ -1,0 +1,21 @@
+:root {
+    font-family: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    color: #202523;
+    background: #f4f1ea;
+    --page-bg: #f4f1ea;
+    --surface: #ffffff;
+    --surface-muted: #eef2f7;
+    --text: #202523;
+    --text-muted: #6d756f;
+    --primary: #d45d3b;
+    --primary-dark: #a9432b;
+    --primary-soft: #f7ddd2;
+    --success: #397653;
+    --danger: #b44d41;
+    --border-color: #dedbd3;
+    --shadow-sm: 0 4px 14px rgba(47, 48, 40, .06);
+    --shadow-md: 0 16px 36px rgba(47, 48, 40, .10);
+    --shadow-lg: 0 24px 60px rgba(47, 48, 40, .14);
+    --radius-lg: 14px;
+    --transition: 160ms ease;
+}

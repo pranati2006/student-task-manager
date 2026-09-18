@@ -1,1 +1,47 @@
-/* Auth-specific overrides live in global.css for the starter scaffold. */
+.auth-wrapper {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    padding: 1.5rem;
+    background: radial-gradient(circle at 15% 15%, #f3cabc, transparent 28rem), radial-gradient(circle at 85% 85%, #d7e3d8, transparent 24rem), var(--page-bg);
+}
+
+.auth-card {
+    width: min(100%, 440px);
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    background: var(--surface);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-card h2 {
+    margin: 0 0 1.5rem;
+    color: #283b34;
+    font-family: Georgia, serif;
+    font-size: 2.1rem;
+    letter-spacing: -.03em;
+}
+
+.auth-card .form-group+.form-group {
+    margin-top: 1rem;
+}
+
+.auth-card button {
+    width: 100%;
+    margin-top: 1.25rem;
+}
+
+.auth-footer {
+    display: flex;
+    justify-content: center;
+    gap: .35rem;
+    margin-top: 1.25rem;
+    color: var(--text-muted);
+    font-size: .85rem;
+}
+
+.auth-footer a {
+    color: var(--primary);
+    font-weight: 700;
+}

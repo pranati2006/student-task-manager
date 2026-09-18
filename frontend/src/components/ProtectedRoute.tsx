@@ -1,4 +1,3 @@
-import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { Loading } from './Loading';
@@ -7,8 +6,10 @@ export const ProtectedRoute = () => {
     const { user, loading } = useAuth();
 
     if (loading) {
-        return <Loading text="Verifying session..." />;
+        return <Loading text="Verifying your session..." />;
     }
 
-    return user ? <Outlet /> : <Navigate to="/login" replace />;
+    return user
+        ? <Outlet />
+        : <Navigate to="/login" replace />;
 };

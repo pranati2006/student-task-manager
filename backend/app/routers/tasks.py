@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Query
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from datetime import datetime, timezone
 from typing import List, Optional
@@ -39,7 +40,8 @@ def get_tasks(
     if priority_filter:
         query = query.filter(Task.priority == priority_filter)
     if search:
-        query = query.filter(Task.title.ilike(f"%{search}%") | Task.description.ilike(f"%{search}%"))
+        search_term = f"%{search.strip()}%"
+        query = query.filter(func.coalesce(Task.title, '').ilike(search_term) | func.coalesce(Task.description, '').ilike(search_term))
     
     if sort == "due_date":
         query = query.order_by(Task.due_date.asc().nullslast())
